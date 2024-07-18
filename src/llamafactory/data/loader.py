@@ -128,9 +128,10 @@ def _load_single_dataset(
         dataset = dataset.select(indexes)
         logger.info("Sampled {} examples from dataset {}.".format(dataset_attr.num_samples, dataset_attr))
 
-    if data_args.max_samples is not None:  # truncate dataset
-        max_samples = min(data_args.max_samples, len(dataset))
-        dataset = dataset.select(range(max_samples))
+    # My modification
+    # if data_args.max_samples is not None:  # truncate dataset
+    #     max_samples = min(data_args.max_samples, len(dataset))
+    #     dataset = dataset.select(range(max_samples))
 
     return align_dataset(dataset, dataset_attr, data_args, training_args)
 
@@ -146,7 +147,7 @@ def _get_merged_dataset(
         return None
 
     datasets = []
-    for dataset_attr in get_dataset_list(dataset_names, data_args.dataset_dir):
+    for dataset_attr in get_dataset_list(dataset_names, data_args):
         if (stage == "rm" and dataset_attr.ranking is False) or (stage != "rm" and dataset_attr.ranking is True):
             raise ValueError("The dataset is not applicable in the current training stage.")
 

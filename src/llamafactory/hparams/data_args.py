@@ -73,7 +73,12 @@ class DataArguments:
         default=None,
         metadata={"help": "The number of processes to use for the pre-processing."},
     )
-    max_samples: Optional[int] = field(
+    # max_samples: Optional[int] = field(
+    #     default=None,
+    #     metadata={"help": "For debugging purposes, truncate the number of examples for each dataset."},
+    # )
+    # My modification
+    max_samples: Optional[str] = field(
         default=None,
         metadata={"help": "For debugging purposes, truncate the number of examples for each dataset."},
     )

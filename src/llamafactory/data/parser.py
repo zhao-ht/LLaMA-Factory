@@ -69,11 +69,15 @@ class DatasetAttr:
     def set_attr(self, key: str, obj: Dict[str, Any], default: Optional[Any] = None) -> None:
         setattr(self, key, obj.get(key, default))
 
-
-def get_dataset_list(dataset_names: Optional[Sequence[str]], dataset_dir: str) -> List["DatasetAttr"]:
+# My modification
+def get_dataset_list(dataset_names: Optional[Sequence[str]], data_args) -> List["DatasetAttr"]:
     r"""
     Gets the attributes of the datasets.
     """
+
+    # My modification
+    dataset_dir=data_args.dataset_dir
+
     if dataset_names is None:
         dataset_names = []
 
@@ -94,11 +98,27 @@ def get_dataset_list(dataset_names: Optional[Sequence[str]], dataset_dir: str) -
 
             dataset_info = None
 
+    # My modification
+    if data_args.max_samples is not None:
+        assert isinstance(data_args.max_samples, str)
+        max_samples = [eval(ms.strip()) for ms in data_args.max_samples.split(",")]
+        if len(max_samples)==1:
+            max_samples = max_samples * len(dataset_names)
+        else:
+            assert len(max_samples)==len(dataset_names)
+    else:
+        max_samples = [None]*len(dataset_names)
+
     dataset_list: List["DatasetAttr"] = []
-    for name in dataset_names:
+    # My modification
+    for name,num_samples in zip(dataset_names, max_samples):
         if dataset_info is None:  # dataset_dir is ONLINE
             load_from = "ms_hub" if use_modelscope() else "hf_hub"
             dataset_attr = DatasetAttr(load_from, dataset_name=name)
+
+            # My modification
+            dataset_attr.num_samples=num_samples
+
             dataset_list.append(dataset_attr)
             continue
 
@@ -147,6 +167,9 @@ def get_dataset_list(dataset_names: Optional[Sequence[str]], dataset_dir: str) -
             )
             for tag in tag_names:
                 dataset_attr.set_attr(tag, dataset_info[name]["tags"])
+
+        # My modification
+        dataset_attr.num_samples=num_samples
 
         dataset_list.append(dataset_attr)
 

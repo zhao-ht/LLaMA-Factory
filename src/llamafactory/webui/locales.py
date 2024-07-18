@@ -173,7 +173,7 @@ LOCALES = {
     },
     "dataset_dir": {
         "en": {
-            "label": "Data dir",
+            "label": "data dir",
             "info": "Path to the data directory.",
         },
         "ru": {

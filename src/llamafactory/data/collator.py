@@ -64,7 +64,7 @@ def prepare_4d_attention_mask(attention_mask_with_indices: "torch.Tensor", dtype
 @dataclass
 class SFTDataCollatorWith4DAttentionMask(DataCollatorForSeq2Seq):
     r"""
-    Data collator for 4d attention mask.
+    data collator for 4d attention mask.
     """
 
     block_diag_attn: bool = False
@@ -82,7 +82,7 @@ class SFTDataCollatorWith4DAttentionMask(DataCollatorForSeq2Seq):
 @dataclass
 class PairwiseDataCollatorWithPadding(DataCollatorForSeq2Seq):
     r"""
-    Data collator for pairwise data.
+    data collator for pairwise data.
     """
 
     def __call__(self, features: Sequence[Dict[str, Any]]) -> Dict[str, "torch.Tensor"]:
@@ -114,7 +114,7 @@ class PairwiseDataCollatorWithPadding(DataCollatorForSeq2Seq):
 @dataclass
 class KTODataCollatorWithPadding(DataCollatorForSeq2Seq):
     r"""
-    Data collator for KTO data.
+    data collator for KTO data.
     """
 
     def __call__(self, features: Sequence[Dict[str, Any]]) -> Dict[str, "torch.Tensor"]:

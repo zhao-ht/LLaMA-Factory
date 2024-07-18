@@ -7,12 +7,12 @@ import datasets
 
 _HF_ENDPOINT = os.getenv("HF_ENDPOINT", "https://huggingface.co")
 
-_DESCRIPTION = "UltraChat: Large-scale, Informative, and Diverse Multi-round Dialogue Data."
+_DESCRIPTION = "UltraChat: Large-scale, Informative, and Diverse Multi-round Dialogue data."
 
 _CITATION = """\
 @misc{UltraChat,
   author = {Ding, Ning and Chen, Yulin and Xu, Bokai and Hu, Shengding and Qin, Yujia and Liu, Zhiyuan and Sun, Maosong and Zhou, Bowen},
-  title = {UltraChat: A Large-scale Auto-generated Multi-round Dialogue Data},
+  title = {UltraChat: A Large-scale Auto-generated Multi-round Dialogue data},
   year = {2023},
   publisher = {GitHub},
   journal = {GitHub repository},

@@ -32,7 +32,7 @@ from llamafactory.model import load_model, load_tokenizer
 @dataclass
 class PairwiseDataCollatorWithPadding(DataCollatorForSeq2Seq):
     r"""
-    Data collator for pairwise data.
+    data collator for pairwise data.
     """
 
     train_on_prompt: bool = False

@@ -100,8 +100,11 @@ def get_dataset_list(dataset_names: Optional[Sequence[str]], data_args) -> List[
 
     # My modification
     if data_args.max_samples is not None:
-        assert isinstance(data_args.max_samples, str)
-        max_samples = [eval(ms.strip()) for ms in data_args.max_samples.split(",")]
+        if isinstance(data_args.max_samples, int):
+            max_samples=[data_args.max_samples]
+        else:
+            assert isinstance(data_args.max_samples, str)
+            max_samples = [eval(ms.strip()) for ms in data_args.max_samples.split(",")]
         if len(max_samples)==1:
             max_samples = max_samples * len(dataset_names)
         else:

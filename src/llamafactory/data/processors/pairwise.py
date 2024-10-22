@@ -11,13 +11,12 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
+import json
 from typing import TYPE_CHECKING, Any, Dict, List, Optional, Sequence, Tuple
 
 from ...extras.constants import IGNORE_INDEX
 from ...extras.logging import get_logger
 from .processor_utils import get_paligemma_token_type_ids, get_pixel_values, infer_seqlen
-
 
 if TYPE_CHECKING:
     from transformers import PreTrainedTokenizer, ProcessorMixin
@@ -25,19 +24,18 @@ if TYPE_CHECKING:
     from ...hparams import DataArguments
     from ..template import Template
 
-
 logger = get_logger(__name__)
 
 
 def _encode_pairwise_example(
-    prompt: Sequence[Dict[str, str]],
-    response: Sequence[Dict[str, str]],
-    system: Optional[str],
-    tools: Optional[str],
-    template: "Template",
-    tokenizer: "PreTrainedTokenizer",
-    processor: Optional["ProcessorMixin"],
-    data_args: "DataArguments",
+        prompt: Sequence[Dict[str, str]],
+        response: Sequence[Dict[str, str]],
+        system: Optional[str],
+        tools: Optional[str],
+        template: "Template",
+        tokenizer: "PreTrainedTokenizer",
+        processor: Optional["ProcessorMixin"],
+        data_args: "DataArguments",
 ) -> Tuple[List[int], List[int], List[int], List[int]]:
     if processor is not None and not hasattr(processor, "image_seq_length"):  # llava-like models
         prompt[0]["content"] = template.image_token + prompt[0]["content"]
@@ -71,11 +69,11 @@ def _encode_pairwise_example(
 
 
 def preprocess_pairwise_dataset(
-    examples: Dict[str, List[Any]],
-    template: "Template",
-    tokenizer: "PreTrainedTokenizer",
-    processor: Optional["ProcessorMixin"],
-    data_args: "DataArguments",
+        examples: Dict[str, List[Any]],
+        template: "Template",
+        tokenizer: "PreTrainedTokenizer",
+        processor: Optional["ProcessorMixin"],
+        data_args: "DataArguments",
 ) -> Dict[str, List[List[int]]]:
     # build input pairs with format `<bos> X`, `Y1 <eos>` and `Y2 <eos>`
     model_inputs = {
@@ -137,3 +135,16 @@ def print_pairwise_dataset_example(example: Dict[str, List[int]], tokenizer: "Pr
     print("rejected_inputs:\n{}".format(tokenizer.decode(example["rejected_input_ids"], skip_special_tokens=False)))
     print("rejected_label_ids:\n{}".format(example["rejected_labels"]))
     print("rejected_labels:\n{}".format(tokenizer.decode(valid_rejected_labels, skip_special_tokens=False)))
+    example_dict = {
+        "chosen_input_ids": example["chosen_input_ids"],
+        "chosen_inputs": tokenizer.decode(example["chosen_input_ids"], skip_special_tokens=False),
+        "chosen_label_ids": example["chosen_labels"],
+        "chosen_labels": tokenizer.decode(valid_chosen_labels, skip_special_tokens=False),
+        "rejected_input_ids": example["rejected_input_ids"],
+        "rejected_inputs": tokenizer.decode(example["rejected_input_ids"], skip_special_tokens=False),
+        "rejected_label_ids": example["rejected_labels"],
+        "rejected_labels": tokenizer.decode(valid_rejected_labels, skip_special_tokens=False)
+    }
+    print(example.keys())
+    with open('data_example.json', 'w') as outfile:
+        json.dump(example_dict, outfile,indent=2)
